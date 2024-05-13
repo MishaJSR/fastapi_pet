@@ -20,7 +20,6 @@ class TaskOrm(Model):
 
 
 async def create_tables():
-    # https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#synopsis-core
     async with engine.begin() as conn:
         await conn.run_sync(Model.metadata.create_all)
 

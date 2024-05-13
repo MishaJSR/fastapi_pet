@@ -7,14 +7,12 @@ from schemas import STaskAdd, STask, STaskId
 
 router = APIRouter(
     prefix="/tasks",
-    tags=["Таски"],
+    tags=["Работа с задачами"],
 )
 
 
 @router.post("")
-async def add_task(
-        task: Annotated[STaskAdd, Depends()],
-) -> STaskId:
+async def add_task(task: Annotated[STaskAdd, Depends()],) -> STaskId:
     task_id = await TaskRepository.add_one(task)
     return {"ok": True, "task_id": task_id}
 
