@@ -19,6 +19,14 @@ class TaskOrm(Model):
     description: Mapped[Optional[str]]
 
 
+class AuthOrm(Model):
+    __tablename__ = "auth"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    phone: Mapped[str]
+    phone_validation_token: Mapped[str]
+
+
 async def create_tables():
     async with engine.begin() as conn:
         await conn.run_sync(Model.metadata.create_all)

@@ -1,9 +1,9 @@
-from typing import Annotated
+from typing import Annotated, Union
 
 from fastapi import APIRouter, Depends
 
-from repository import TaskRepository
-from schemas import STaskAdd, STask, STaskId
+from repositories.task_repository import TaskRepository
+from schemas.task_schemas import STaskAdd, STask, STaskId
 
 router = APIRouter(
     prefix="/tasks",
@@ -21,3 +21,8 @@ async def add_task(task: Annotated[STaskAdd, Depends()],) -> STaskId:
 async def get_tasks() -> list[STask]:
     tasks = await TaskRepository.find_all()
     return tasks
+
+@router.get("/{task_id}")
+async def get_tasks_by_id(task_id: int) -> Union[STask, list]:
+    task = await TaskRepository.find_one(task_id)
+    return task

@@ -1,7 +1,9 @@
+from typing import Union
+
 from sqlalchemy import select
 
-from database import new_session, TaskOrm
-from schemas import STaskAdd, STask
+from db.database import new_session, TaskOrm
+from schemas.task_schemas import STaskAdd, STask
 
 
 class TaskRepository:
@@ -24,3 +26,13 @@ class TaskRepository:
             task_models = result.scalars().all()
             task_schemas = [STask.model_validate(task_model) for task_model in task_models]
             return task_schemas
+
+    @classmethod
+    async def find_one(cls, task_id: int) -> Union[STask, list]:
+        async with new_session() as session:
+            query = select(TaskOrm).where(TaskOrm.id == task_id)
+            result = await session.execute(query)
+            task = result.scalars().one_or_none()
+            if not task:
+                return []
+            return task
